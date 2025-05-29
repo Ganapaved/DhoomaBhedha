@@ -1,11 +1,11 @@
 /* ---------------  Blynk template credentials  --------------- */
-#define BLYNK_TEMPLATE_ID "TMPL36d7NRU1A"         // <-- copy from blynk.cloud
-#define BLYNK_TEMPLATE_NAME "Gas Monitor"
-#define BLYNK_AUTH_TOKEN "Gc2QN2Z9KuH4wUtuOLTeCr2YqDM4HSl5"
+#define BLYNK_TEMPLATE_ID "TEMPLATE ID"         // <-- copy from blynk.cloud
+#define BLYNK_TEMPLATE_NAME "TEMPLATE NAME"
+#define BLYNK_AUTH_TOKEN "BLYNK_AUTH_TOKEN"
 
 /* ---------------  Wi-Fi creds (edit!)  --------------- */
-char ssid[] = "Lasya-6";
-char pass[] = "9494929156@6";                  // <-- change in real code
+char ssid[] = "ssid";
+char pass[] = "passwd";                 // <-- change in real code
 
 //char ssid[] = "OPPO A11k";
 //char pass[] = "ganesha123456";
