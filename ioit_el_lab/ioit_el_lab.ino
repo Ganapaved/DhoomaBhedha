@@ -7,8 +7,7 @@
 char ssid[] = "ssid";
 char pass[] = "passwd";                 // <-- change in real code
 
-//char ssid[] = "OPPO A11k";
-//char pass[] = "ganesha123456";
+
 
 /* ---------------  Libraries  --------------- */
 #include <WiFi.h>
