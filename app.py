@@ -118,9 +118,9 @@ if __name__ == '__main__':
         db.create_all()
         rows = [(e.ts, e.value) for e in GasEvent.query.order_by(GasEvent.id)]
         predictor.maybe_retrain(rows)
-    with app.app_context():
-        rows = GasEvent.query.order_by(GasEvent.id).all()
-        for i, r in enumerate(rows):
-            print(f"{i}: id={r.id}, value={r.value}, ts={r.ts}")
+    # with app.app_context():
+    #     rows = GasEvent.query.order_by(GasEvent.id).all()
+    #     for i, r in enumerate(rows):
+    #         print(f"{i}: id={r.id}, value={r.value}, ts={r.ts}")
 
     app.run(host='0.0.0.0', port=5000, debug=True)
