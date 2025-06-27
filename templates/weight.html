@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weight Dashboard</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 60%;
+            margin: auto;
+        }
+        th, td {
+            border: 1px solid #333;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #555;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <button>
+          <a href="/">Back to Home</a>
+    </button>
+<h2 style="text-align:center;">Live Weight Dashboard (Last 30 Weights)</h2>
+
+<table id="weightTable">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Weight (g)</th>
+            <th>Timestamp</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Data will load here dynamically -->
+    </tbody>
+</table>
+
+<script>
+    function fetchWeights() {
+        fetch('/api/weight/last/30')
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.querySelector('#weightTable tbody');
+                tableBody.innerHTML = '';  // Clear old rows
+
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.id}</td>
+                        <td>${item.weight.toFixed(2)}</td>
+                        <td>${item.timestamp}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(error => console.error('Error fetching weight data:', error));
+    }
+
+    // Initial load
+    fetchWeights();
+
+    // Auto refresh every 5 seconds
+    setInterval(fetchWeights, 5000);
+</script>
+
+</body>
+</html>

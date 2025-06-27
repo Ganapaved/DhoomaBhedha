@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Beehive Monitor - Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f1f1;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        section {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+        .card {
+            background-color: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .alert {
+            color: red;
+            font-weight: bold;
+        }
+        .semi-alert {
+            color: orange;
+            font-weight: bold;
+        }
+        .timestamp {
+            font-size: 0.9em;
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🐝 Smart Beehive Gas and Weight Monitor</h1>
+    <p>Real-time monitoring of gas levels and hive weight to ensure beehive health and honey production.</p>
+</header>
+
+<section>
+    <h2>About this Project</h2>
+    <p>This project uses ESP32, gas sensors, and a load cell with HX711 to monitor gas levels (e.g., CO2 or dangerous gases) and hive weight. Real-time data is pushed to this dashboard using a Flask server backend with SQLite storage.</p>
+</section>
+
+<main class="app-content">
+    <div class="forward-navigation">
+        <a href="/gas" class="forward-link">
+            Gas Values
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m12 5 7 7-7 7"/>
+                <path d="M5 12h14"/>
+            </svg>
+        </a>
+    </div>
+</main>
+
+<main class="app-content">
+    <div class="forward-navigation">
+        <a href="/weight" class="forward-link">
+            Beehive Weight
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m12 5 7 7-7 7"/>
+                <path d="M5 12h14"/>
+            </svg>
+        </a>
+    </div>
+</main>
+
+
+<section id="data-section">
+    <h2>📡 Live Sensor Data</h2>
+
+    <div class="card" id="gas-card">
+        <h3>🌫️ Latest Gas Level:</h3>
+        <p><span id="gas-value">--</span> ppm</p>
+        <p class="timestamp" id="gas-time">--</p>
+    </div>
+
+    <div class="card" id="weight-card">
+        <h3>⚖️ Latest Beehive Weight:</h3>
+        <p><span id="weight-value">--</span> g</p>
+        <p class="timestamp" id="weight-time">--</p>
+        <p id="weight-alert"></p>
+    </div>
+</section>
+
+<script>
+    function fetchData() {
+        fetch('/api/gas/last/1')
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    document.getElementById('gas-value').innerText = data[0].value;
+                    document.getElementById('gas-time').innerText = "Timestamp: " + data[0].timestamp;
+                }
+            });
+
+        fetch('/api/weight/last/1')
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    let weight = data[0].weight;
+                    let ts = data[0].timestamp;
+
+                    document.getElementById('weight-value').innerText = weight;
+                    document.getElementById('weight-time').innerText = "Timestamp: " + ts;
+
+                    let alertBox = document.getElementById('weight-alert');
+                    if (weight > 200 && weight <= 500) {
+                        alertBox.innerText = "⚠️ The weight of the beehive crossed semi-threshold. Once check the beehive.";
+                        alertBox.className = "semi-alert";
+                    } else if (weight > 500) {
+                        alertBox.innerText = "🚨 The weight crossed full threshold! Check for honey.";
+                        alertBox.className = "alert";
+                    } else {
+                        alertBox.innerText = "";
+                        alertBox.className = "";
+                    }
+                }
+            });
+    }
+
+    // Fetch data every 5 seconds
+    setInterval(fetchData, 5000);
+    window.onload = fetchData;
+</script>
+
+
+</body>
+</html>

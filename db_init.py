@@ -7,3 +7,7 @@ class GasEvent(db.Model):
     value = db.Column(db.Integer , nullable =True)
     ts = db.Column(db.Integer , nullable =True)
     
+class WeightEvent(db.Model):
+    id = db.Column(db.Integer , primary_key = True)
+    weight = db.Column(db.Float , nullable = False)
+    ts = db.Column(db.DateTime , nullable = False)

@@ -1,7 +1,7 @@
 from flask import Flask,request,jsonify,render_template
 from datetime import datetime , timedelta
 from model import GasPredictor
-from db_init import db,GasEvent
+from db_init import db,GasEvent , WeightEvent
 from math import floor
 
 app = Flask(__name__)
@@ -13,8 +13,17 @@ db.init_app(app)
 predictor = GasPredictor(retrain_every=20)   # tune to taste
 
 @app.route('/')
+def home():
+    return render_template('home.html')
+
+@app.route('/gas')
 def dashboard():
     return render_template('dashboard.html')
+
+@app.route('/weight')
+def weight_dashboard():
+    return render_template('weight.html')
+
 
 @app.route('/api/gas',methods=['POST'])
 def log_gas():
@@ -36,6 +45,43 @@ def log_gas():
         "value" : value,
         "ts" : ts.isoformat()
     }), 201
+
+@app.route('/api/weight',methods = ['POST'])
+def log_weight():
+    data = request.get_json(force=True)
+    weight = float(data['weight'])
+    ts = datetime.fromisoformat(data['ts'])
+
+    event = WeightEvent(weight = weight , ts=ts)
+    db.session.add(event)
+    db.session.commit()
+
+    print(f"Saved weight ->  {weight}g at {ts}")
+
+    return jsonify({
+        "stored" : True,
+        "weight" : weight,
+        "ts" : ts.isoformat()
+    }),201
+
+
+@app.route('/api/weight/last/<int:n>', methods=['GET'])
+def get_last_weights(n):
+    rows = (WeightEvent.query
+            .order_by(WeightEvent.id.desc())
+            .limit(n)
+            .all())
+
+    out = []
+    for r in rows:  
+        timestamp = r.ts.isoformat() if isinstance(r.ts, datetime) else str(r.ts)
+        out.append({
+            "id": r.id,
+            "weight": r.weight,
+            "timestamp": timestamp
+        })
+
+    return jsonify(out), 200
 
 
 
@@ -76,7 +122,7 @@ def predict():
         eta_string = f"{eta_days} day(s), {eta_hours} hour(s)"
 
         predicted_list = [
-            f"ETA: {eta_string}",
+            f"Estimated_Time: {eta_string}",
             f"Predicted gas level at leak: {round(y_hat, 2)} ppm"
         ]
 

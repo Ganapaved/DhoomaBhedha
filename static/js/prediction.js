@@ -42,8 +42,8 @@ async function fetchPrediction() {
     populatePredictionList(data);
   } catch (error) {
     console.error('Error fetching prediction:', error);
-    document.getElementById('eta-value').textContent = 'Given Below';
-    document.getElementById('expected-value').textContent = 'Given Below';
+    document.getElementById('eta-value').textContent = 'It is the predicted time in which gas leakage may happen';
+    document.getElementById('expected-value').textContent = 'It is the predicted value of the gas Leakage';
   }
 }
 
