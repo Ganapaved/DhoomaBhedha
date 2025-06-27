@@ -21,7 +21,9 @@ class GasPredictor:
     # ------------------------------------------------------------------
     def _prepare(self, rows):
         """Return X (= hours since first) and y arrays for sklearn."""
-        recent_rows = rows[:]
+        recent_rows = rows[:30] + rows[61:] 
+        recent_rows = [r for r in recent_rows if r[1] < 1800]  # lose the 2047 ppm spike
+        # recent_rows.sort(key=lambda r: r[2])
         cleaned = []
         for r in recent_rows:
             if isinstance(r, (tuple, list)) and len(r) == 2:

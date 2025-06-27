@@ -5,15 +5,15 @@
   --color-primary-200: #90CAF9;
   --color-primary-300: #64B5F6;
   --color-primary-400: #42A5F5;
-  --color-primary-500: #0A84FF;
+  --color-primary-500: #FFC107;
   --color-primary-600: #1E88E5;
-  --color-primary-700: #1976D2;
+  --color-primary-700: #FFA000;
   --color-primary-800: #1565C0;
-  --color-primary-900: #0D47A1;
+  --color-primary-900: #FFD54F;
 
   --color-success-50: #E8F5E9;
   --color-success-300: #81C784;
-  --color-success-500: #30D158;
+  --color-success-500: #4CAF50;
   --color-success-700: #388E3C;
   --color-success-900: #1B5E20;
 
@@ -41,8 +41,8 @@
   --color-neutral-900: #212529;
 
   /* Light Theme Colors */
-  --color-background: #F8F9FA;
-  --color-surface: #FFFFFF;
+  --color-background: #f8faf5;
+  --color-surface: #fffbe7;
   --color-text: #212529;
   --color-text-secondary: #495057;
   --color-border: #DEE2E6;
@@ -60,7 +60,7 @@
   --space-8: 3rem;     /* 48px */
   
   /* Typography */
-  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-family: 'Poppins', 'Nunito', Arial, sans-serif;
   --font-size-xs: 0.75rem;   /* 12px */
   --font-size-sm: 0.875rem;  /* 14px */
   --font-size-md: 1rem;      /* 16px */
@@ -86,13 +86,18 @@
 
   /* Header */
   --header-height: 64px;
+
+  /* New colors */
+  --color-honey: #FFC107;
+  --color-leaf: #4CAF50;
+  --color-sky: #64B5F6;
 }
 
 /* Dark Theme */
 .dark-theme {
-  --color-background: #1A1A1A;
-  --color-surface: #2C2C2E;
-  --color-text: #FFFFFF;
+  --color-background: #18180f;
+  --color-surface: #23231a;
+  --color-text: #fffbe7;
   --color-text-secondary: #ABABAB;
   --color-border: #3A3A3C;
   --color-divider: #3A3A3C;
@@ -125,6 +130,29 @@ body {
   transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 0;
+  opacity: 0.18;
+  pointer-events: none;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  transition: background-image 0.5s;
+  filter: brightness(1.25) saturate(1.1);
+}
+body.home-bg::before {
+  background-image: url('https://i.pinimg.com/736x/59/96/d2/5996d2a66b764caca1581934263045f0.jpg');
+}
+body.gas-bg::before {
+  background-image: url('https://i.pinimg.com/736x/2b/29/5f/2b295f7a1841feff5d0974ea42ea51f7.jpg');
+}
+body.weight-bg::before {
+  background-image: url('https://i.pinimg.com/736x/99/9a/83/999a83d3832bdbeda9d72abe544c3e43.jpg');
+}
+
 .app-container {
   min-height: 100vh;
   display: flex;
@@ -133,13 +161,13 @@ body {
 
 /* Header Styles */
 .app-header {
-  background-color: var(--color-primary-500);
+  background: linear-gradient(90deg, var(--color-honey), var(--color-leaf), var(--color-sky));
   color: white;
   position: sticky;
   top: 0;
   z-index: 100;
   height: var(--header-height);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -195,6 +223,19 @@ body {
   font-size: var(--font-size-xl);
   font-weight: 600;
   margin: 0;
+}
+
+.app-header .tagline {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+.app-header .bee-icon {
+  font-size: 2.2rem;
+  color: var(--color-honey);
 }
 
 /* Main Content Styles */
@@ -646,4 +687,84 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* === Card Enhancements === */
+.card, .stat-item, .prediction-card {
+  border-radius: var(--radius-xl);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  background: var(--color-surface);
+  margin-bottom: var(--space-4);
+  position: relative;
+  overflow: hidden;
+}
+.card .icon, .stat-item .icon, .prediction-card .icon {
+  font-size: 2rem;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+  color: var(--color-honey);
+}
+
+/* === Stylish Buttons & Navigation === */
+.primary-button, .forward-link, .back-link, button, a.button {
+  border-radius: 2rem;
+  padding: 0.6em 1.6em;
+  font-size: 1.1em;
+  font-weight: 600;
+  background: linear-gradient(90deg, var(--color-honey), var(--color-leaf), var(--color-sky));
+  color: #fff !important;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  text-decoration: none;
+}
+.primary-button:hover, .forward-link:hover, .back-link:hover, button:hover, a.button:hover {
+  background: linear-gradient(90deg, var(--color-sky), var(--color-leaf), var(--color-honey));
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+}
+
+/* === Responsive Card & Button Layout === */
+@media (max-width: 600px) {
+  .card, .stat-item, .prediction-card {
+    margin-bottom: var(--space-5);
+    padding: var(--space-4) var(--space-2);
+  }
+  .primary-button, .forward-link, .back-link, button, a.button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* === Header & Footer Consistency === */
+.app-header, .app-footer {
+  font-family: 'Poppins', 'Nunito', Arial, sans-serif;
+  background: linear-gradient(90deg, var(--color-honey), var(--color-leaf), var(--color-sky));
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+.app-header h1, .app-header .tagline {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: 2rem;
+  font-weight: 700;
+}
+.app-header .bee-icon {
+  font-size: 2.2rem;
+  color: var(--color-honey);
+}
+
+/* === Utility: Hide background on print === */
+@media print {
+  body::before { display: none !important; }
+}
+
+/* === Font Awesome Support === */
+.fa, .fas, .far, .fal, .fab {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
 }

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Beehive Monitor - Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Google Fonts: Poppins & Nunito -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+    <style>
+      html, body { height: 100%; }
+    </style>
+</head>
+<body class="home-bg">
+<header class="app-header">
+    <div class="header-content">
+        <div class="logo-container">
+            <h1>Smart Beehive Monitoring System</h1>
+        </div>
+        <div class="header-actions">
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+                <i class="fas fa-adjust"></i>
+            </button>
+        </div>
+    </div>
+</header>
+<main class="app-content">
+    <div style="display: flex; flex-wrap: wrap; gap: 2rem; justify-content: flex-end; margin-bottom: 2rem;">
+        <a href="/gas" class="primary-button"><i class="fas fa-wind"></i> Gas Values</a>
+        <a href="/weight" class="primary-button"><i class="fas fa-balance-scale"></i> Weight Stats</a>
+    </div>
+    <section>
+        <div class="card" style="max-width: 700px; margin: 0 auto 2rem auto; background: rgba(255,251,231,0.93); box-shadow: 0 4px 24px rgba(0,0,0,0.10); text-align:center; display:block;">
+            <h2 style="margin-bottom:0.5rem; font-size:1.6rem; color:#222; font-weight:700; letter-spacing:-1px; text-align:center;">About this Project</h2>
+            <p style="font-size:1.08rem; color:#444; line-height:1.7; font-family:'Nunito','Poppins',Arial,sans-serif; margin:0 auto; max-width:90%;">This project uses <b>ESP32</b>, gas sensors, and a load cell with <b>HX711</b> to monitor gas levels (e.g., CO₂ or dangerous gases) and hive weight. Real-time data is pushed to this dashboard using a <b>Flask</b> server backend with <b>SQLite</b> storage.</p>
+        </div>
+        <div style="text-align:center; margin-bottom:2.5rem;">
+            <button onclick="document.getElementById('data-section').scrollIntoView({behavior: 'smooth'});" class="primary-button" style="margin-top:0.5rem;"> <i class="fas fa-bolt"></i> Monitor Live Data</button>
+        </div>
+    </section>
+    <section id="data-section" style="margin-top:2rem;">
+        <h2 style="text-align:center; margin-bottom:1.5rem; margin-top:0;">LIVE SENSOR DATA</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 2rem;">
+            <div class="card" id="gas-card" style="flex:1; min-width:260px;">
+                <h3><i class="fas fa-wind icon"></i> Latest Gas Level:</h3>
+                <p><span id="gas-value">--</span> ppm</p>
+                <p class="timestamp" id="gas-time">--</p>
+            </div>
+            <div class="card" id="weight-card" style="flex:1; min-width:260px;">
+                <h3><i class="fas fa-balance-scale icon"></i> Latest Beehive Weight:</h3>
+                <p><span id="weight-value">--</span> g</p>
+                <p class="timestamp" id="weight-time">--</p>
+                <p id="weight-alert"></p>
+            </div>
+        </div>
+    </section>
+</main>
+<footer class="app-footer" style="position:fixed;left:0;right:0;bottom:0;width:100%;z-index:10;">
+    <p style="margin:0; color:#fff; font-family:'Poppins', 'Nunito', Arial, sans-serif; font-size:1rem; text-align:center;">&copy; 2025 Smart Beehive Monitoring System</p>
+</footer>
+<script>
+    // Theme toggle
+    const themeBtn = document.getElementById('theme-toggle');
+    themeBtn.onclick = function() {
+        document.body.classList.toggle('dark-theme');
+        localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+    };
+    // Persist theme
+    if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-theme');
+    // Data fetching
+    function fetchData() {
+        fetch('/api/gas/last/1')
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    document.getElementById('gas-value').innerText = data[0].value;
+                    document.getElementById('gas-time').innerText = "Timestamp: " + data[0].timestamp;
+                }
+            });
+        fetch('/api/weight/last/1')
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    let weight = data[0].weight;
+                    let ts = data[0].timestamp;
+                    document.getElementById('weight-value').innerText = weight;
+                    document.getElementById('weight-time').innerText = "Timestamp: " + ts;
+                    let alertBox = document.getElementById('weight-alert');
+                    if (weight > 200 && weight <= 500) {
+                        alertBox.innerText = "⚠️ The weight of the beehive crossed semi-threshold. Once check the beehive.";
+                        alertBox.className = "semi-alert";
+                    } else if (weight > 500) {
+                        alertBox.innerText = "🚨 The weight crossed full threshold! Check for honey.";
+                        alertBox.className = "alert";
+                    } else {
+                        alertBox.innerText = "";
+                        alertBox.className = "";
+                    }
+                }
+            });
+    }
+    setInterval(fetchData, 5000);
+    window.onload = fetchData;
+</script>
+</body>
+</html>
