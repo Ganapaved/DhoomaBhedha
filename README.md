@@ -9,14 +9,8 @@ The **Smart Beehive Monitoring System** is an IoT-based project designed to moni
 - [🔧 Project Overview](#-project-overview)
 - [📦 Components Used](#-components-used)
 - [🧠 System Architecture](#-system-architecture)
-- [📱 Features](#-features)
-- [📡 How It Works](#-how-it-works)
-- [🛠 Installation & Setup](#-installation--setup)
-- [📊 Web Dashboard](#-web-dashboard)
 - [📁 Folder Structure](#-folder-structure)
-- [🔮 Future Improvements](#-future-improvements)
-- [👨‍💻 Authors](#-authors)
-- [📜 License](#-license)
+
 
 ---
 
