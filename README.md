@@ -56,18 +56,16 @@ Honeybees are essential for biodiversity and agriculture. However, changes in te
 
 ---
 
-## 📁 Folder Structure
-SmartBeehive/
-├── smart_beehive.ino         # Arduino code for ESP32
-├── app.py                    # Flask application
-├── db_init.py                # Database models
-├── model.py                  # Gas prediction logic
-├── gas.db                    # SQLite database file
-├── requirements.txt          # Python dependencies
-├── templates/                # HTML pages
-│   ├── home.html
-│   ├── dashboard.html
-│   ├── weight.html
-│   └── prediction.html
-├── static/                   # (Optional) CSS or JS files
-└── README.md                 # Project documentation
+ SmartBeehive/
+         ├── smart_beehive.ino         # Arduino code for ESP32
+         ├── app.py                    # Flask application
+         ├── db_init.py                # Database models
+         ├── model.py                  # Gas prediction logic
+         ├── templates/                # HTML pages
+         │   ├── home.html
+         │   ├── dashboard.html
+         │   ├── weight.html
+         │   └── prediction.html
+         ├── static/                   # (Optional) CSS or JS files
+         └── README.md                 # Project documentation 
+         
